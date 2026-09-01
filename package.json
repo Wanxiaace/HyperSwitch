@@ -9,6 +9,9 @@
     "name": "HyperSwitch",
     "email": "Wanxiaace@users.noreply.github.com"
   },
+  "homepage": "https://github.com/Wanxiaace/HyperSwitch",
+  "license": "MIT",
+  "desktopName": "HyperSwitch",
   "scripts": {
     "dev": "electron-vite dev --watch",
     "preview": "electron-vite preview",
