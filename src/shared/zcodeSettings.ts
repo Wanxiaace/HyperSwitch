@@ -8,14 +8,15 @@ import {
   type Modality
 } from './provider'
 
-export const ZCODE_KINDS = ['openai', 'anthropic'] as const
+export const ZCODE_KINDS = ['openai-compatible', 'openai', 'anthropic'] as const
 export type ZcodeKind = (typeof ZCODE_KINDS)[number]
 
 export const ZCODE_APIS = ['openai-completions', 'openai-responses', 'anthropic-messages'] as const
 export type ZcodeApi = (typeof ZCODE_APIS)[number]
 
 export const ZCODE_KIND_LABELS: Record<ZcodeKind, string> = {
-  openai: 'OpenAI Compatible',
+  'openai-compatible': 'OpenAI Chat Completions',
+  openai: 'OpenAI Responses',
   anthropic: 'Anthropic Messages'
 }
 
@@ -32,7 +33,9 @@ export function isZcodeBuiltinKey(key: string): boolean {
 }
 
 export function kindFromFormat(format: ApiFormat): ZcodeKind {
-  return format === 'anthropic-messages' ? 'anthropic' : 'openai'
+  if (format === 'anthropic-messages') return 'anthropic'
+  if (format === 'openai-responses') return 'openai'
+  return 'openai-compatible'
 }
 
 export interface ZcodeModelRow {
@@ -96,7 +99,7 @@ export function emptyZcodeProvider(partial: Partial<ZcodeProviderView> = {}): Zc
     key,
     originalKey: key,
     name: '',
-    kind: 'openai',
+    kind: 'openai-compatible',
     apiKey: '',
     baseUrl: '',
     models: [],
@@ -195,7 +198,7 @@ export function parseZcodeSettings(raw: unknown): ZcodeSettingsView {
         key,
         originalKey: key,
         name: asString(entry.name),
-        kind: isZcodeKind(kindRaw) ? kindRaw : 'openai',
+        kind: isZcodeKind(kindRaw) ? kindRaw : 'openai-compatible',
         apiKey: asString(options.apiKey),
         baseUrl: asString(options.baseURL),
         models: modelsFromNode(entry.models),
@@ -220,7 +223,7 @@ export function sanitizeZcodeSettings(value: unknown): ZcodeSettingsView {
           key,
           originalKey: asString(entry.originalKey).trim() || key,
           name: asString(entry.name),
-          kind: isZcodeKind(kindRaw) ? kindRaw : 'openai',
+          kind: isZcodeKind(kindRaw) ? kindRaw : 'openai-compatible',
           apiKey: asString(entry.apiKey),
           baseUrl: asString(entry.baseUrl),
           models: sanitizeModels(entry.models),

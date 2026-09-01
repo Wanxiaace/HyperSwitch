@@ -99,6 +99,8 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
@@ -126,6 +128,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: ${{ steps.meta.outputs.name }}
+          body_path: .github/release-notes.md
           files: artifacts/*
           generate_release_notes: true
           fail_on_unmatched_files: true
