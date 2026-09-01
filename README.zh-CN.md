@@ -81,8 +81,21 @@ npm run dev
 | --- | --- |
 | `npm run dev` | 启动 Electron + Vue 热更新 |
 | `npm run typecheck` | 主进程 / 渲染进程类型检查 |
-| `npm run build` | 生产构建 |
-| `npm run build:win` | 构建 Windows 安装包 |
+| `npm run build` | 生产构建（不含安装包） |
+| `npm run build:win` | Windows NSIS 安装包 |
+| `npm run build:mac` | macOS DMG / ZIP（必须在 macOS 上打） |
+| `npm run build:linux` | Linux AppImage / deb |
+
+安装包输出在 `dist/`。请在对应系统上打包：Windows 用 `build:win`，macOS 用 `build:mac`，Linux 用 `build:linux`。Windows 上打不出 macOS 安装包。
+
+推送以 `Release` 开头的 tag（例如 `Release-0.1.0`）会触发 GitHub Actions，构建 Windows / macOS / Linux 安装包（x64 与 arm64）并发布 GitHub Release。macOS 包不签名。
+
+```bash
+git tag Release-0.1.0
+git push origin Release-0.1.0
+```
+
+工作流文件必须在被打 tag 的那次提交上。对同一 tag 重跑会覆盖该 Release。
 
 主进程 IPC 变更后需要重启 Electron，仅渲染层热更新不够。
 

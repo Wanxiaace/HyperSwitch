@@ -2,6 +2,7 @@ appId: com.hyperswitch.app
 productName: HyperSwitch
 directories:
   buildResources: build
+  output: dist
 files:
   - '!**/.vscode/*'
   - '!src/*'
@@ -11,13 +12,40 @@ files:
   - '!{README.md,CHANGELOG.md}'
 asarUnpack:
   - resources/**
+extraResources:
+  - from: resources/icon.ico
+    to: icon.ico
+  - from: resources/icon.png
+    to: icon.png
 win:
   executableName: HyperSwitch
+  icon: icon.ico
   target:
     - nsis
 nsis:
-  artifactName: ${name}-${version}-setup.${ext}
+  artifactName: ${productName}-${version}-win-${arch}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
+  installerIcon: icon.ico
+  uninstallerIcon: icon.ico
   createDesktopShortcut: always
+mac:
+  icon: icon.png
+  identity: null
+  notarize: false
+  hardenedRuntime: false
+  gatekeeperAssess: false
+  category: public.app-category.developer-tools
+  target:
+    - dmg
+    - zip
+  artifactName: ${productName}-${version}-mac-${arch}.${ext}
+linux:
+  icon: icon.png
+  category: Development
+  executableName: hyperswitch
+  target:
+    - AppImage
+    - deb
+  artifactName: ${productName}-${version}-linux-${arch}.${ext}
 npmRebuild: false

@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <defs>
+    <radialGradient id="hs-bg" cx="50%" cy="36%" r="74%">
+      <stop stop-color="#163E84" />
+      <stop offset="1" stop-color="#07183F" />
+    </radialGradient>
+    <linearGradient id="hs-mark" x1="64" y1="14" x2="64" y2="116" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7AF8D0" />
+      <stop offset="0.38" stop-color="#3ED4F2" />
+      <stop offset="1" stop-color="#3A76FF" />
+    </linearGradient>
+    <filter id="hs-shadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="2.8" stdDeviation="1.8" flood-color="#031028" flood-opacity="0.42" />
+    </filter>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#hs-bg)" />
+  <g filter="url(#hs-shadow)" fill="url(#hs-mark)" stroke="url(#hs-mark)">
+    <path d="M32 21v86" fill="none" stroke-width="16.5" stroke-linecap="round" />
+    <path d="M96 21v86" fill="none" stroke-width="16.5" stroke-linecap="round" />
+    <path d="M34 60A30 27 0 0 1 77 38" fill="none" stroke-width="13" stroke-linecap="round" />
+    <path
+      d="M73 30 95 42 70 51Z"
+      stroke-width="3.2"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+    />
+    <path
+      d="M34 60A30 27 0 0 1 77 38"
+      fill="none"
+      stroke-width="13"
+      stroke-linecap="round"
+      transform="rotate(180 64 64)"
+    />
+    <path
+      d="M73 30 95 42 70 51Z"
+      stroke-width="3.2"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+      transform="rotate(180 64 64)"
+    />
+  </g>
+</svg>

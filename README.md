@@ -81,8 +81,21 @@ npm run dev
 | --- | --- |
 | `npm run dev` | Electron + Vue with hot reload |
 | `npm run typecheck` | Typecheck main and renderer |
-| `npm run build` | Production build |
-| `npm run build:win` | Windows installer |
+| `npm run build` | Production build (no installer) |
+| `npm run build:win` | Windows NSIS installer |
+| `npm run build:mac` | macOS DMG / ZIP (must run on macOS) |
+| `npm run build:linux` | Linux AppImage / deb |
+
+Installers land in `dist/`. Each platform should be packaged on that OS: Windows → `build:win`, macOS → `build:mac`, Linux → `build:linux`. macOS packages cannot be built on Windows.
+
+Push a tag starting with `Release` (for example `Release-0.1.0`) to have GitHub Actions build Windows, macOS, and Linux installers (x64 and arm64) and publish a GitHub Release. macOS packages are unsigned.
+
+```bash
+git tag Release-0.1.0
+git push origin Release-0.1.0
+```
+
+The workflow file must be on the tagged commit. Re-running the same tag overwrites that Release.
 
 Restart Electron after main-process IPC changes; renderer hot reload is not enough.
 

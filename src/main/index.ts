@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { electronApp, is, optimizer } from '@electron-toolkit/utils'
 import { detectAgentTools } from './agentDetect'
@@ -32,6 +33,12 @@ if (process.platform === 'win32') {
 
 const WINDOW_BG = '#1e1e21'
 
+function nativeIcon(): string {
+  const file = process.platform === 'win32' ? 'icon.ico' : 'icon.png'
+  const candidates = [join(process.resourcesPath, file), join(__dirname, '../../resources', file)]
+  return candidates.find((path) => existsSync(path)) ?? candidates[1]
+}
+
 function createWindow(): void {
   const mainWindow = new BrowserWindow({
     width: 1280,
@@ -42,6 +49,7 @@ function createWindow(): void {
     autoHideMenuBar: true,
     backgroundColor: WINDOW_BG,
     title: 'HyperSwitch',
+    icon: nativeIcon(),
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'hidden',
     trafficLightPosition: { x: 16, y: 12 },
     ...(process.platform === 'darwin'
@@ -79,6 +87,7 @@ function createWindow(): void {
 
 app.whenReady().then(() => {
   electronApp.setAppUserModelId('com.hyperswitch.app')
+  if (process.platform === 'darwin') app.dock?.setIcon(nativeIcon())
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)

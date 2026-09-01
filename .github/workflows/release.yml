@@ -1,0 +1,133 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'Release*'
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            name: windows
+            script: build:win
+            args: --x64 --arm64
+          - os: macos-latest
+            name: macos
+            script: build:mac
+            args: --x64 --arm64
+          - os: ubuntu-latest
+            name: linux
+            script: build:linux
+            args: --x64 --arm64
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-builder
+            ~/AppData/Local/electron/Cache
+            ~/AppData/Local/electron-builder/Cache
+            ~/Library/Caches/electron
+            ~/Library/Caches/electron-builder
+          key: ${{ runner.os }}-electron-${{ hashFiles('package-lock.json') }}
+
+      - name: Apply version from tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          ver="${tag#Release}"
+          ver="${ver#/}"
+          ver="${ver#-}"
+          ver="${ver#_}"
+          ver="${ver#v}"
+          if [[ "$ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+([+.-].*)?$ ]]; then
+            echo "Using version ${ver} from tag ${tag}"
+            npm version "${ver}" --no-git-tag-version --allow-same-version
+          else
+            echo "Tag ${tag} has no semver suffix; keeping package.json version"
+          fi
+
+      - run: npm ci
+
+      - name: Build installer
+        shell: bash
+        run: npm run ${{ matrix.script }} -- ${{ matrix.args }}
+
+      - name: List dist
+        if: always()
+        shell: bash
+        run: ls -la dist || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.name }}
+          if-no-files-found: error
+          path: |
+            dist/*.exe
+            dist/*.dmg
+            dist/*.zip
+            dist/*.AppImage
+            dist/*.deb
+
+  publish:
+    name: GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Release title
+        id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          ver="${tag#Release}"
+          ver="${ver#/}"
+          ver="${ver#-}"
+          ver="${ver#_}"
+          ver="${ver#v}"
+          if [[ "$ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+([+.-].*)?$ ]]; then
+            echo "name=HyperSwitch ${ver}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${tag}" >> "$GITHUB_OUTPUT"
+          fi
+          ls -la artifacts
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ steps.meta.outputs.name }}
+          files: artifacts/*
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
