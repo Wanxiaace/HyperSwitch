@@ -42,6 +42,12 @@ Fetching `/models` only helps fill model IDs. Capabilities are not inferred from
 
 API formats: OpenAI Chat Completions, OpenAI Responses, Anthropic Messages, and Google Generative AI. Each tool only receives options it actually supports.
 
+<p align="center">
+  <img src="docs/screenshots/agent-tools.png" alt="Agent tools with local configs detected" width="900">
+</p>
+
+<p align="center"><sub>Agent tools lists every supported app. <b>Config found</b> means the local directory exists and HyperSwitch can write through a plugin. Use <b>Detect again</b> after installing a new tool.</sub></p>
+
 ## Workflow
 
 1. **Providers**: fill in the endpoint and models
@@ -49,6 +55,34 @@ API formats: OpenAI Chat Completions, OpenAI Responses, Anthropic Messages, and 
 3. **Agent tools**: pick providers and models, write them into the target app
 
 You can refresh models.dev later from Settings or Home.
+
+## Screenshots
+
+### Map models on an agent
+
+Each agent exposes its own roles (Claude Code example: Sonnet / Opus / Fable / Haiku / Subagent). Menu labels only change what the tool shows in `/model`. The request model id is what actually gets sent. **1M** is a Claude Code context-window claim, not something HyperSwitch infers from `/models`.
+
+<p align="center">
+  <img src="docs/screenshots/agent-model-mapping.png" alt="Claude Code model mapping" width="900">
+</p>
+
+<p align="center"><sub>Fill from the model catalog or type ids by hand. Custom headers and system prompt are optional; only options the target tool supports are written.</sub></p>
+
+### Prompt presets
+
+Save reusable system prompts here, then on the Agent page choose whether to apply one. Presets prefill; they do not lock the field.
+
+<p align="center">
+  <img src="docs/screenshots/prompt-presets.png" alt="Prompt presets editor" width="900">
+</p>
+
+### Header presets
+
+Save reusable HTTP header sets (for example a `User-Agent`). On the Agent page, **Fill from preset** copies them in so you can still edit before save.
+
+<p align="center">
+  <img src="docs/screenshots/header-presets.png" alt="Header presets editor" width="900">
+</p>
 
 ## Data directory
 

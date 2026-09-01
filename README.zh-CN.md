@@ -42,6 +42,12 @@
 
 接口格式支持 OpenAI Chat Completions、OpenAI Responses、Anthropic Messages、Google Generative AI。各工具按自身能力接入，不支持的选项不会强行写入。
 
+<p align="center">
+  <img src="docs/screenshots/agent-tools.png" alt="已检测到本地配置的 Agent 工具" width="900">
+</p>
+
+<p align="center"><sub>Agent 工具列出全部支持的软件。<b>Config found</b> 表示本机配置目录存在，可通过插件写入。新装工具后点 <b>Detect again</b>。</sub></p>
+
 ## 使用流程
 
 1. **供应商**：填写接口和模型
@@ -49,6 +55,34 @@
 3. **Agent 工具**：选择供应商与模型，写入对应软件
 
 之后可在「设置」或主页再次更新 models.dev。
+
+## 界面预览
+
+### 在 Agent 上映射模型
+
+每个 Agent 有自己的角色（图为 Claude Code：Sonnet / Opus / Fable / Haiku / Subagent）。菜单名称只影响工具里 `/model` 的显示，真正发出去的是请求模型 id。**1M** 是 Claude Code 的上下文窗口声明，不是从 `/models` 推断出来的。
+
+<p align="center">
+  <img src="docs/screenshots/agent-model-mapping.png" alt="Claude Code 模型映射" width="900">
+</p>
+
+<p align="center"><sub>可从模型目录预填充，也可手填 id。自定义请求头和系统提示词可选；目标工具不支持的选项不会写入。</sub></p>
+
+### 提示词预设
+
+在这里保存可复用的系统提示词，再到 Agent 页选择是否套用。预设只做预填充，不会锁死字段。
+
+<p align="center">
+  <img src="docs/screenshots/prompt-presets.png" alt="提示词预设编辑" width="900">
+</p>
+
+### 请求头预设
+
+保存可复用的 HTTP 请求头（例如 `User-Agent`）。在 Agent 页用 **Fill from preset** 填入后仍可再改再保存。
+
+<p align="center">
+  <img src="docs/screenshots/header-presets.png" alt="请求头预设编辑" width="900">
+</p>
 
 ## 数据目录
 
