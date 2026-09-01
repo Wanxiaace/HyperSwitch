@@ -5,7 +5,10 @@
   "private": true,
   "type": "module",
   "main": "./out/main/index.js",
-  "author": "HyperSwitch",
+  "author": {
+    "name": "HyperSwitch",
+    "email": "Wanxiaace@users.noreply.github.com"
+  },
   "scripts": {
     "dev": "electron-vite dev --watch",
     "preview": "electron-vite preview",

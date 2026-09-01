@@ -44,6 +44,9 @@ linux:
   icon: icon.png
   category: Development
   executableName: hyperswitch
+  maintainer: HyperSwitch <Wanxiaace@users.noreply.github.com>
+  desktopName: HyperSwitch
+  syncDesktopName: true
   target:
     - AppImage
     - deb
